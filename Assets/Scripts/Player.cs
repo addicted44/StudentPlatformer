@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;//Allows us to use SceneManager
+
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour
@@ -35,12 +38,25 @@ public class Player : MonoBehaviour
     private bool wallSliding;
     private int wallDirX;
 
+    private int food;                           //Used to store player food points total during level.
+
+
     private void Start()
     {
         controller = GetComponent<Controller2D>();
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+
+        //Get the current food point total stored in GameManager.instance between levels.
+        food = GameManager.instance.playerFoodPoints;
+    }
+
+    //This function is called when the behaviour becomes disabled or inactive.
+    private void OnDisable()
+    {
+        //When Player object is disabled, store the current local food total in the GameManager so it can be re-loaded in next level.
+        GameManager.instance.playerFoodPoints = food;
     }
 
     private void Update()
