@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
     private bool wallSliding;
     private int wallDirX;
 
-    private int food;                           //Used to store player food points total during level.
+ 
 
 
     private void Start()
@@ -47,17 +47,12 @@ public class Player : MonoBehaviour
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
-
-        //Get the current food point total stored in GameManager.instance between levels.
-        food = GameManager.instance.playerFoodPoints;
+        
+        
     }
 
-    //This function is called when the behaviour becomes disabled or inactive.
-    private void OnDisable()
-    {
-        //When Player object is disabled, store the current local food total in the GameManager so it can be re-loaded in next level.
-        GameManager.instance.playerFoodPoints = food;
-    }
+    
+    
 
     private void Update()
     {
