@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Controller2D : RaycastController
 {
@@ -6,16 +7,24 @@ public class Controller2D : RaycastController
     private float maxClimbAngle = 80f;
     private float maxDescendAngle = 80f;
     private int score = 0;
+    private int lives = 3;
 
     public CollisionInfo collisions;
     [HideInInspector]
     public Vector2 playerInput;
+
+    GameObject player;
+    Vector3 originalPos;
 
     public override void Start()
     {
         base.Start();
 
         collisions.faceDir = 1;
+
+        player = GameObject.FindGameObjectWithTag("PlayerP");
+        Vector3 originalPos = player.transform.position;
+
     }
 
     public void Move(Vector2 moveAmount, bool standingOnPlatform = false)
@@ -78,6 +87,16 @@ public class Controller2D : RaycastController
                 if(hit.distance<1 && hit.collider.gameObject.CompareTag("PickUp"))
                 {
                     hit.collider.gameObject.SetActive(false);
+                }
+
+                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly"))
+                {
+                    Vector3 test = new Vector3(-13, -4, 0);
+                    player.transform.position = test;
+                    if (lives > 0)
+                        lives--;
+                    else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                    Debug.Log(lives);
                 }
 
                 if (hit.distance == 0)
@@ -201,6 +220,16 @@ public class Controller2D : RaycastController
                 else if (hit.distance < 1 && hit.collider.gameObject.CompareTag("PickUp"))
                 {
                     hit.collider.gameObject.SetActive(false);
+                }
+
+                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly"))
+                {
+                    Vector3 test = new Vector3(-13, -4, 0);
+                    player.transform.position = test;
+                    if (lives > 0)
+                        lives--;
+                    else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                    Debug.Log(lives);
                 }
 
                 moveAmount.y = (hit.distance - skinWidth) * directionY;
