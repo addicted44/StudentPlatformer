@@ -5,7 +5,10 @@ using UnityEngine.SceneManagement;//Allows us to use SceneManager
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour
+
+
 {
+
     public float maxJumpHeight = 4f;
     public float minJumpHeight = 1f;
     public float timeToJumpApex = .4f;
@@ -38,6 +41,11 @@ public class Player : MonoBehaviour
     private Vector2 directionalInput;
     private bool wallSliding;
     private int wallDirX;
+    //new
+    private float speed = 6.0f;
+    private float jumpSpeed = 8.0f;
+    private float friction = 1.0f; // 0 means no friction; private var curVel = Vector3.zero; private var velY: float = 0; private var character: CharacterController;
+    //end new
 
  
 
@@ -67,7 +75,7 @@ public class Player : MonoBehaviour
     {
         CalculateVelocity();
         HandleWallSliding();
-            
+
         anim.SetFloat("pX", velocity.x);
         anim.SetFloat("pY", velocity.y);
 
@@ -77,7 +85,33 @@ public class Player : MonoBehaviour
         {
             velocity.y = 0f;
         }
-    }
+        //new
+        // get the CharacterController only the first time: if (!character) character = GetComponent(CharacterController); // get the direction from the controls: var dir = Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // calculate the desired velocity: var vel = transform.TransformDirection(dir) * speed;
+
+        // here's where the magic happens: curVel = Vector3.Lerp(curVel, vel, 5 friction friction * Time.deltaTime);
+
+        // apply gravity and jump after the friction! if (character.isGrounded){ velY = 0; if (Input.GetKeyDown("Jump")){ velY = jumpSpeed; } velY -= gravity Time.deltaTime; } curVel.y = velY; character.Move(curVel Time.deltaTime); }
+/*
+        public void OnTriggerEnter(other: Collider){
+            if (other.name == "Ice") {
+                friction = 0.1; // set low friction 
+            }
+            //Reverse Room 
+            if (other.name == "ReverseArea"){
+            ....
+        
+            }
+        }
+
+            function OnTriggerExit(other: Collider){
+                if (other.name == "Ice") {
+                friction = 1; // restore regular friction  
+
+            }
+         
+        }
+        //end new
+    */}
 
     public void SetDirectionalInput(Vector2 input)
     {
@@ -188,3 +222,4 @@ public class Player : MonoBehaviour
     }
 
 }
+
