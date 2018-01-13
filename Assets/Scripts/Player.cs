@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public Vector2 wallLeap;
 
     public Animator anim;
+    public SpriteRenderer rend;
     private int food;
 
     public bool canDoubleJump;
@@ -46,7 +47,7 @@ public class Player : MonoBehaviour
     private float jumpSpeed = 8.0f;
     private float friction = 1.0f; // 0 means no friction; private var curVel = Vector3.zero; private var velY: float = 0; private var character: CharacterController;
     //end new
-
+    bool facingRight;
  
 
 
@@ -57,18 +58,21 @@ public class Player : MonoBehaviour
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 
-        //Get the current food point total stored in GameManager.instance between levels.
-        food = GameManager.instance.playerFoodPoints;
+        facingRight = true;
 
     }
     //This function is called when the behaviour becomes disabled or inactive.
-    private void OnDisable()
-    {
-        //When Player object is disabled, store the current local food total in the GameManager so it can be re-loaded in next level.
-        GameManager.instance.playerFoodPoints = food;
+
+
+    void Flip()
+    { 
+        // Switch the way the player is labelled as facing
+        facingRight = !facingRight;
+        // Multiply the player's x local scale by -1
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
-
-
 
 
     private void Update()
@@ -79,39 +83,61 @@ public class Player : MonoBehaviour
         anim.SetFloat("pX", velocity.x);
         anim.SetFloat("pY", velocity.y);
 
+        if (Input.GetAxisRaw("Horizontal") > 0.5f || Input.GetAxisRaw("Horizontal") < -0.5f)
+        {
+            if (Input.GetAxisRaw("Horizontal") > 0.5f && !facingRight)
+            {
+                //If we're moving right but not facing right, flip the sprite and set     facingRight to true.
+                Flip();
+                facingRight = true;
+            }
+            else if (Input.GetAxisRaw("Horizontal") < 0.5f && facingRight)
+            {
+                //If we're moving left but not facing left, flip the sprite and set facingRight to false.
+                Flip();
+                facingRight = false;
+            }
+
+            //If we're not moving horizontally, check for vertical movement. The "else if" stops diagonal movement. Change to "if" to allow diagonal movement.
+        }
+
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
         if (controller.collisions.above || controller.collisions.below)
         {
             velocity.y = 0f;
         }
+
+        
+
         //new
         // get the CharacterController only the first time: if (!character) character = GetComponent(CharacterController); // get the direction from the controls: var dir = Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // calculate the desired velocity: var vel = transform.TransformDirection(dir) * speed;
 
         // here's where the magic happens: curVel = Vector3.Lerp(curVel, vel, 5 friction friction * Time.deltaTime);
 
         // apply gravity and jump after the friction! if (character.isGrounded){ velY = 0; if (Input.GetKeyDown("Jump")){ velY = jumpSpeed; } velY -= gravity Time.deltaTime; } curVel.y = velY; character.Move(curVel Time.deltaTime); }
-/*
-        public void OnTriggerEnter(other: Collider){
-            if (other.name == "Ice") {
-                friction = 0.1; // set low friction 
-            }
-            //Reverse Room 
-            if (other.name == "ReverseArea"){
-            ....
-        
-            }
-        }
+        /*
+                public void OnTriggerEnter(other: Collider){
+                    if (other.name == "Ice") {
+                        friction = 0.1; // set low friction 
+                    }
+                    //Reverse Room 
+                    if (other.name == "ReverseArea"){
+                    ....
 
-            function OnTriggerExit(other: Collider){
-                if (other.name == "Ice") {
-                friction = 1; // restore regular friction  
+                    }
+                }
 
-            }
-         
-        }
-        //end new
-    */}
+                    function OnTriggerExit(other: Collider){
+                        if (other.name == "Ice") {
+                        friction = 1; // restore regular friction  
+
+                    }
+
+                }
+                //end new
+            */
+    }
 
     public void SetDirectionalInput(Vector2 input)
     {

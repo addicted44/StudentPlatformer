@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
+
 [RequireComponent(typeof(Player))]
 public class PlayerInput : MonoBehaviour
 {
     private Player player;
-
+    public bool inverted = false;
 
 
     private void Start()
@@ -15,9 +16,12 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        player.SetDirectionalInput(directionalInput);
- 
+        Vector2 directionalInput = new Vector2();
+        if(inverted == false)
+            directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        else if(inverted == true) directionalInput =  new Vector2(-Input.GetAxisRaw("Horizontal"), -Input.GetAxisRaw("Vertical"));
+            player.SetDirectionalInput(directionalInput);
+        //Debug.Log(inverted);
 
         if (Input.GetButtonDown("Jump"))
         {
@@ -29,4 +33,10 @@ public class PlayerInput : MonoBehaviour
             player.OnJumpInputUp();
         }
     }
+
+    public void setInputInverse(bool inverse)
+    {
+        inverted = inverse;
+    }
 }
+

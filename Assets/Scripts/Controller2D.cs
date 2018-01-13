@@ -10,7 +10,7 @@ public class Controller2D : RaycastController
     private int score = 0;
     private int lives = 3;
 
-    
+    public PlayerInput other;
 
 
     public CollisionInfo collisions;
@@ -103,6 +103,12 @@ public class Controller2D : RaycastController
                     Debug.Log(lives);
                 }
 
+                /*if (hit.distance < 1 && hit.collider.gameObject.CompareTag("ReverseArea"))
+                {
+                    other.setInputInverse(true);
+                }*/
+                
+
                 if (hit.distance == 0)
                 {
                     continue;
@@ -184,6 +190,7 @@ public class Controller2D : RaycastController
                         collisions.descendingSlope = true;
                         collisions.below = true;
                     }
+
                 }
             }
         }
@@ -235,6 +242,13 @@ public class Controller2D : RaycastController
                     else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                     Debug.Log(lives);
                 }
+
+
+                /*if (hit.distance < 1 && hit.collider.gameObject.CompareTag("ReverseArea"))
+                {
+                    other.setInputInverse(true);
+                }*/
+                
 
                 moveAmount.y = (hit.distance - skinWidth) * directionY;
                 rayLength = hit.distance;
