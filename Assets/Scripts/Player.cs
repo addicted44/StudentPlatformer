@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     private Vector2 directionalInput;
     private bool wallSliding;
     private int wallDirX;
-    //new
+    //new *sliding platform*
     private float speed = 6.0f;
     private float jumpSpeed = 8.0f;
     private float friction = 1.0f; // 0 means no friction; private var curVel = Vector3.zero; private var velY: float = 0; private var character: CharacterController;
