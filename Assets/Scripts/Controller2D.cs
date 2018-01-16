@@ -72,6 +72,7 @@ public class Controller2D : RaycastController
     {
         float directionX = collisions.faceDir;
         float rayLength = Mathf.Abs(moveAmount.x) + skinWidth;
+       
 
         if (Mathf.Abs(moveAmount.x) < skinWidth)
         {
@@ -93,7 +94,7 @@ public class Controller2D : RaycastController
                     hit.collider.gameObject.SetActive(false);
                 }
 
-                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly"))
+                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly") || hit.collider.gameObject.CompareTag("Spikes"))
                 {
                     Vector3 test = new Vector3(-13, -4, 0);
                     player.transform.position = test;
@@ -102,6 +103,12 @@ public class Controller2D : RaycastController
                     else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                     Debug.Log(lives);
                 }
+                /*
+                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("TriggerArea"))
+                {
+                    gameObject.CompareTag("Spikes");
+                    transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
+                }*/
 
                 /*if (hit.distance < 1 && hit.collider.gameObject.CompareTag("ReverseArea"))
                 {

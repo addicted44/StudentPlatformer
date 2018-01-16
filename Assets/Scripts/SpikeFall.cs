@@ -3,49 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-/*
-public class SpikeFall : MonoBehaviour
-{
-
-    public float fallSpeed = 8.0f;
-    private bool playerInBounds;
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        while(playerInBounds = true)
-        {
-            transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
-        }
-        
-    }
-}
-*/
-
  public class SpikeFall : MonoBehaviour
 {
-    private GameObject[] locationsToSpawn;
+
     public float fallSpeed = 10.0f;
-    private float counter = 0;
-    [SerializeField] string[] listOfPossibleTags;
-    [SerializeField] GameObject[] objectToSpawn;
-    [SerializeField] float timeBetweenSpawns = 25.0f;
+    private Rigidbody2D RB2D;
+    public Transform Spawnpoint;
+    public float firstPosition;
+    public float pos_x, pos_y, pos_z;
+    public float end_pos;
+
 
     void Start()
     {
-        locationsToSpawn = GameObject.FindGameObjectsWithTag("Spikes");
+        RB2D = GetComponent<Rigidbody2D>();
     }
+
     void Update()
     {
-        counter += Time.deltaTime;
-        if (counter > timeBetweenSpawns)
-        {            
-            GameObject spawnedObject;
-            transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
-            spawnedObject = Instantiate(objectToSpawn[Random.Range(0, objectToSpawn.Length)]); //, locationsToSpawn[Random.Range(0, locationsToSpawn.Length)].transform.position, Quaternion.identity) as GameObject;
-            spawnedObject.gameObject.tag = listOfPossibleTags[Random.Range(0, listOfPossibleTags.Length)];
-            counter = 0;
+        Vector3 Direction = Vector3.down;
+        transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
+
+        if (gameObject.transform.position.y <= end_pos)
+        {
+            
+            gameObject.transform.position = new Vector3(pos_x, pos_y, pos_z);
+          
         }
     }
+    
 }

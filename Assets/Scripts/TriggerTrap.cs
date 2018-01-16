@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TriggerTrap : MonoBehaviour {
-    public float fallSpeed = 8.0f;
+
     private bool playerInBounds;
+    private Vector3 moveDirection = Vector3.zero;
+    private Vector3 lastMoveDirection = Vector3.zero;
+    private float moveSpeed = 2f;
+    private float slideSpeed = 1.75f;
+    private bool icy = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -24,9 +29,36 @@ public class TriggerTrap : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update() {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        //Vector3 moveDirection = v * camera.forward + h * camera.right;
 
-        transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
+        float inputMagnitude = Mathf.Min(new Vector3(h, 0, v).sqrMagnitude, 1f);
 
+        // store last direction when received some movement
+        if (inputMagnitude > 0.225f)
+        {
+            lastMoveDirection = moveDirection;
+        }
+        // add speed
+        // keeps sliding when still, runs slowly when moving
+        if (icy)
+        {
+            moveDirection = lastMoveDirection * slideSpeed;
+        }
+        else
+        {
+            moveDirection *= moveSpeed;
+        }
+
+       // controller.Move(moveDirection * Time.deltaTime)
+ }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        icy = hit.collider.CompareTag("Ice");
     }
+
+    
 }
