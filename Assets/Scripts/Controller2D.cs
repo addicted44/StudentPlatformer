@@ -240,7 +240,7 @@ public class Controller2D : RaycastController
                     hit.collider.gameObject.SetActive(false);
                 }
 
-                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly"))
+                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly") || hit.collider.gameObject.CompareTag("Spikes"))
                 {
                     Vector3 test = new Vector3(-13, -4, 0);
                     player.transform.position = test;
