@@ -8,7 +8,10 @@ public class Controller2D : RaycastController
     private float maxDescendAngle = 80f;
 
     private int score = 0;
-    private int lives = 3;
+    private double lives = 3.0;
+
+    public GUIText scoreText;
+    public GUIText livesText;
 
     public PlayerInput other;
 
@@ -25,11 +28,27 @@ public class Controller2D : RaycastController
         base.Start();
 
         collisions.faceDir = 1;
+        score = 0;
+        UpdateScore();
+
+        lives = 3.0;
+        UpdateLives();
+
 
         player = GameObject.FindGameObjectWithTag("PlayerP");
         Vector3 originalPos = player.transform.position;
 
     }
+
+    void UpdateScore()
+    {
+        scoreText.text = "Score: " + score;
+    }
+    void UpdateLives()
+    {
+        livesText.text = "Lives: " + lives;
+    }
+
 
     public void Move(Vector2 moveAmount, bool standingOnPlatform = false)
     {
@@ -92,6 +111,8 @@ public class Controller2D : RaycastController
                 if(hit.distance<1 && hit.collider.gameObject.CompareTag("PickUp"))
                 {
                     hit.collider.gameObject.SetActive(false);
+                    score += 100;
+                    UpdateScore();
                 }
 
                 if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly") || hit.collider.gameObject.CompareTag("Spikes"))
@@ -102,7 +123,19 @@ public class Controller2D : RaycastController
                         lives--;
                     else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                     Debug.Log(lives);
+                    UpdateLives();
+                    score -= 100;
+                    UpdateScore();
                 }
+                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("BadCandy"))
+                {
+                    hit.collider.gameObject.SetActive(false);
+                    score -= 30;
+                    lives += 0.5;
+                    UpdateScore();
+                    UpdateLives();
+                }
+              
                 /*
                 if (hit.distance < 1 && hit.collider.gameObject.CompareTag("TriggerArea"))
                 {
@@ -238,6 +271,8 @@ public class Controller2D : RaycastController
                 else if (hit.distance < 1 && hit.collider.gameObject.CompareTag("PickUp"))
                 {
                     hit.collider.gameObject.SetActive(false);
+                    score += 100;
+                    UpdateScore();
                 }
 
                 if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly") || hit.collider.gameObject.CompareTag("Spikes"))
@@ -248,8 +283,18 @@ public class Controller2D : RaycastController
                         lives--;
                     else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                     Debug.Log(lives);
+                    UpdateLives();
+                    score -= 100;
+                    UpdateScore();
                 }
-
+                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("BadCandy"))
+                {
+                    hit.collider.gameObject.SetActive(false);
+                    score -= 30;
+                    lives += 0.5;
+                    UpdateScore();
+                    UpdateLives();
+                }
 
                 /*if (hit.distance < 1 && hit.collider.gameObject.CompareTag("ReverseArea"))
                 {
