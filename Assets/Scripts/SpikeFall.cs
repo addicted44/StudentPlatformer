@@ -7,7 +7,7 @@ using UnityEngine;
 {
 
     public float fallSpeed;
-    //private Rigidbody2D RB2D;
+    private Rigidbody2D RB2D;
     //public float firstPosition;
     public float pos_x, pos_y, pos_z;
     public float end_pos;
@@ -15,7 +15,7 @@ using UnityEngine;
 
     void Start()
     {
-        //RB2D = GetComponent<Rigidbody2D>();
+        RB2D = GetComponent<Rigidbody2D>();
     }
 
     void Update()
