@@ -4,30 +4,31 @@ using UnityEngine;
 
 public class ReverseInput : MonoBehaviour {
 
-	// Use this for initialization
+    // Use this for initialization
+
+    public Player player;
+
 	void Start () {
 		
 	}
 
-    public PlayerInput other;
-
     // Update is called once per frame
     void Update () {
-        if (playerInBounds)
+        if (player.transform.position.x > 74.6 && player.transform.position.x < 95.5 && player.transform.position.y > -27 && player.transform.position.y < -16)
         {
-            other.setInputInverse(true);
+            player.GetComponent<PlayerInput>().setInputInverse(true);
         }
 
         else
         {
-            other.setInputInverse(false);
+            player.GetComponent<PlayerInput>().setInputInverse(false);
         }
         //Debug.Log(playerInBounds);
         }
 
-    private bool playerInBounds;
+    //private bool playerInBounds;
 
-    void OnTriggerEnter(Collider other)
+    /*void OnTriggerEnter(Collider other)
     {
         Debug.Log("Collision!");
         if (other.gameObject.tag == "PlayerP")
@@ -42,5 +43,5 @@ public class ReverseInput : MonoBehaviour {
         {
             playerInBounds = false;
         }
-    }
+    }*/
 }

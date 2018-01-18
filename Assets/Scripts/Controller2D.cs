@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class Controller2D : RaycastController
 {
@@ -23,6 +24,10 @@ public class Controller2D : RaycastController
     GameObject player;
     Vector3 originalPos;
 
+    Player playerScript;
+
+    bool immune = false;
+
     public override void Start()
     {
         base.Start();
@@ -38,6 +43,7 @@ public class Controller2D : RaycastController
         player = GameObject.FindGameObjectWithTag("PlayerP");
         Vector3 originalPos = player.transform.position;
 
+        playerScript = GetComponent<Player>();
     }
 
     void UpdateScore()
@@ -87,6 +93,13 @@ public class Controller2D : RaycastController
         }
     }
 
+    IEnumerator Timing()
+    {
+        yield return new WaitForSeconds(3);
+        playerScript.setSpeed(1.0f);
+        immune = false;
+    }
+
     private void HorizontalCollisions(ref Vector2 moveAmount)
     {
         float directionX = collisions.faceDir;
@@ -115,7 +128,7 @@ public class Controller2D : RaycastController
                     UpdateScore();
                 }
 
-                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly") || hit.collider.gameObject.CompareTag("Spikes"))
+                if (hit.distance < 1 && immune == false && hit.collider.gameObject.CompareTag("Deadly") || hit.collider.gameObject.CompareTag("Spikes"))
                 {
                     Vector3 test = new Vector3(-13, -4, 0);
                     player.transform.position = test;
@@ -130,12 +143,25 @@ public class Controller2D : RaycastController
                 if (hit.distance < 1 && hit.collider.gameObject.CompareTag("BadCandy"))
                 {
                     hit.collider.gameObject.SetActive(false);
+                    playerScript.setSpeed(0.5f);
+                    StartCoroutine(Timing());
                     score -= 30;
                     lives += 0.5;
                     UpdateScore();
                     UpdateLives();
                 }
-              
+
+                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("RedBull"))
+                {
+                    hit.collider.gameObject.SetActive(false);
+                    playerScript.setSpeed(1.5f);
+                    immune = true;
+                    StartCoroutine(Timing());
+                    score += 30;
+                    UpdateScore();
+                    UpdateLives();
+                }
+
                 /*
                 if (hit.distance < 1 && hit.collider.gameObject.CompareTag("TriggerArea"))
                 {
@@ -147,7 +173,7 @@ public class Controller2D : RaycastController
                 {
                     other.setInputInverse(true);
                 }*/
-                
+
 
                 if (hit.distance == 0)
                 {
@@ -236,6 +262,8 @@ public class Controller2D : RaycastController
         }
     }
 
+    
+
     private void VerticalCollisions(ref Vector2 moveAmount)
     {
         float directionY = Mathf.Sign(moveAmount.y);
@@ -275,7 +303,7 @@ public class Controller2D : RaycastController
                     UpdateScore();
                 }
 
-                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("Deadly") || hit.collider.gameObject.CompareTag("Spikes"))
+                if (hit.distance < 1 && immune == false && hit.collider.gameObject.CompareTag("Deadly") || hit.collider.gameObject.CompareTag("Spikes"))
                 {
                     Vector3 test = new Vector3(-13, -4, 0);
                     player.transform.position = test;
@@ -292,6 +320,19 @@ public class Controller2D : RaycastController
                     hit.collider.gameObject.SetActive(false);
                     score -= 30;
                     lives += 0.5;
+                    playerScript.setSpeed(0.5f);
+                    StartCoroutine(Timing());
+                    UpdateScore();
+                    UpdateLives();
+                }
+
+                if (hit.distance < 1 && hit.collider.gameObject.CompareTag("RedBull"))
+                {
+                    hit.collider.gameObject.SetActive(false);
+                    playerScript.setSpeed(1.5f);
+                    immune = true;
+                    StartCoroutine(Timing());
+                    score += 30;
                     UpdateScore();
                     UpdateLives();
                 }
@@ -300,7 +341,7 @@ public class Controller2D : RaycastController
                 {
                     other.setInputInverse(true);
                 }*/
-                
+
 
                 moveAmount.y = (hit.distance - skinWidth) * directionY;
                 rayLength = hit.distance;

@@ -17,6 +17,7 @@ public class CameraFollow : MonoBehaviour
     private float smoothLookVelocityX;
     private float smoothVelocityY;
 
+
     private bool lookAheadStopped;
 
     private void Start()
@@ -81,6 +82,7 @@ public class CameraFollow : MonoBehaviour
 
         public void Update(Bounds targetBounds)
         {
+            
             float shiftX = 0f;
             if (targetBounds.min.x < left)
             {

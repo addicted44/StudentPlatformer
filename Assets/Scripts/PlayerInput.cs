@@ -6,6 +6,7 @@ public class PlayerInput : MonoBehaviour
 {
     private Player player;
     public bool inverted = false;
+    public AudioClip jump;
 
 
     private void Start()
@@ -26,6 +27,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             player.OnJumpInputDown();
+            AudioSource.PlayClipAtPoint(jump, player.transform.position, 1.0f);
         }
 
         if (Input.GetButtonUp("Jump"))

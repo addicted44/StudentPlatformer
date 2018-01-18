@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;//Allows us to use SceneManager
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour
 
-
 {
 
     public float maxJumpHeight = 4f;
@@ -22,7 +21,6 @@ public class Player : MonoBehaviour
 
     public Animator anim;
     public SpriteRenderer rend;
-    private int food;
 
     public bool canDoubleJump;
     private bool isDoubleJumping = false;
@@ -42,13 +40,9 @@ public class Player : MonoBehaviour
     private Vector2 directionalInput;
     private bool wallSliding;
     private int wallDirX;
-    //new *sliding platform*
-    private float speed = 6.0f;
-    private float jumpSpeed = 8.0f;
-    private float friction = 1.0f; // 0 means no friction; private var curVel = Vector3.zero; private var velY: float = 0; private var character: CharacterController;
-    //end new
     bool facingRight;
- 
+
+    public float speed;
 
 
     private void Start()
@@ -57,7 +51,7 @@ public class Player : MonoBehaviour
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
-
+        speed = 1;
         facingRight = true;
 
     }
@@ -101,47 +95,22 @@ public class Player : MonoBehaviour
             //If we're not moving horizontally, check for vertical movement. The "else if" stops diagonal movement. Change to "if" to allow diagonal movement.
         }
 
-        controller.Move(velocity * Time.deltaTime, directionalInput);
+        controller.Move(velocity * Time.deltaTime * speed, directionalInput);
 
         if (controller.collisions.above || controller.collisions.below)
         {
             velocity.y = 0f;
         }
-
-        
-
-        //new
-        // get the CharacterController only the first time: if (!character) character = GetComponent(CharacterController); // get the direction from the controls: var dir = Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // calculate the desired velocity: var vel = transform.TransformDirection(dir) * speed;
-
-        // here's where the magic happens: curVel = Vector3.Lerp(curVel, vel, 5 friction friction * Time.deltaTime);
-
-        // apply gravity and jump after the friction! if (character.isGrounded){ velY = 0; if (Input.GetKeyDown("Jump")){ velY = jumpSpeed; } velY -= gravity Time.deltaTime; } curVel.y = velY; character.Move(curVel Time.deltaTime); }
-        /*
-                public void OnTriggerEnter(other: Collider){
-                    if (other.name == "Ice") {
-                        friction = 0.1; // set low friction 
-                    }
-                    //Reverse Room 
-                    if (other.name == "ReverseArea"){
-                    ....
-
-                    }
-                }
-
-                    function OnTriggerExit(other: Collider){
-                        if (other.name == "Ice") {
-                        friction = 1; // restore regular friction  
-
-                    }
-
-                }
-                //end new
-            */
     }
 
     public void SetDirectionalInput(Vector2 input)
     {
         directionalInput = input;
+    }
+
+    public void setSpeed(float s)
+    {
+        speed = s;
     }
 
     public void OnJumpInputDown()
@@ -225,27 +194,6 @@ public class Player : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
     }
 
-    public void LoseFood(int loss)
-    {
-        //Set the trigger for the player animator to transition to the playerHit animation.
-        anim.SetTrigger("playerHit");
-
-        //Subtract lost food points from the players total.
-        food -= loss;
-
-        //Check to see if game has ended.
-        CheckIfGameOver();
-    }
-    private void CheckIfGameOver()
-    {
-        //Check if food point total is less than or equal to zero.
-        if (food <= 0)
-        {
-
-            //Call the GameOver function of GameManager.
-            GameManager.instance.GameOver();
-        }
-    }
 
 }
 
